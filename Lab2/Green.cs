@@ -11,11 +11,12 @@ namespace Lab2
             double answer = 0;
 
             // code here
-            for (double i = 0; i <= n; i +=2)
+            double sm = 0;
+            for (double i = 0; i <= n; i = i + 2)
             {
-                double a = i / (i + 1);
-                answer += a;
+                sm += (double)i / (i + 1);
             }
+            answer = sm;
             // end
 
             return answer;
@@ -25,26 +26,31 @@ namespace Lab2
             double answer = 0;
 
             // code here
-            for (double i=0; i>=n; i = i - 1)
+            double sum = 1;
+            double zn = 1;
+            for (int i = 1; i <= n; i++)
             {
-                double a = Math.Pow(x, i);
-                answer += a;
+                zn *= x;
+                sum += (1 / zn);
             }
+            answer = sum;
             // end
 
             return answer;
         }
         public long Task3(int n)
         {
-            long answer = 0;
+            long answer = 1;
 
             // code here
-            long a = 1;
-            for(int i=0;i<=n;i=i+1)
+            long fact = 1;
+
+            for (int i = 1; i <= n; i++)
             {
-                a = a * i;
-                answer += a;
+                fact *= i;       // теперь fact = i!
+                answer += fact;  // добавляем
             }
+            return answer;
             // end
 
             return answer;
@@ -54,12 +60,22 @@ namespace Lab2
             double answer = 0;
 
             // code here
-            int a = 1;
-            while(Math.Abs(Math.Sin(a * Math.Pow(x,a))) > E)
+            double E = 1e-4;
+            double sm = 0;
+            double arg = 1;
+            for (int n = 1; n < 1000; n++)
             {
-                answer += Math.Sin(a * Math.Pow(x, a));
-                a = a + 1;
+                arg *= x;
+                Console.WriteLine(arg);
+                double sin = Math.Sin(n * arg);
+
+                sm += sin;
+                if (Math.Abs(sin) < E)
+                {
+                    break;
+                }
             }
+            answer = sm;
             // end
 
             return answer;
@@ -69,14 +85,16 @@ namespace Lab2
             int answer = 0;
 
             // code here
-            int a = 0;
-            double b = 10000;
-            while(b > E)
+            double E = 1e-4;
+            for (double i = -10; i < 1000; i++)
             {
-                b = Math.Abs(Math.Pow(x, -(a - 1)) - Math.Pow(x, -a));
-                a = a + 1;
+                double rasnost = Math.Abs((1 / Math.Pow(x, i)) - (1 / Math.Pow(x, i - 1)));
+                if (rasnost < E)
+                {
+                    answer = (int)i;
+                    break;
+                }
             }
-            answer = a - 1;
             // end
 
             return answer;
@@ -93,6 +111,7 @@ namespace Lab2
                 answer += elem;
                 i++;
             }
+            return answer;
             // end
 
             return answer;
@@ -103,10 +122,11 @@ namespace Lab2
             int answer = 0;
 
             // code here
-            double cur = L;
-            while (cur > Da)
+            double D = 1e-10; // диаметр атома по умолчанию (например, водород)
+
+            while (L > D)
             {
-                cur /= 2;
+                L /= 2.0;
                 answer++;
             }
             // end
@@ -119,22 +139,24 @@ namespace Lab2
             double SY = 0;
 
             // code here
-            for (double x = a; x <= b + 0.00001; x += h)
+            for (double x = a; x <= b + 1e-12; x += h)
+            //1e-12 нужно для минимальной погрешности
+            //то есть комп о,1 хранит как 0,10001 и тогда будет ошибка потому что результат не точный
             {
-                int i = 0; //степень с которой начинаем
-                double _1stnum = -1; // первая 
-                double _num2 = 1; // x^2i
-                double numI = 1;
-                while (Math.Abs(numI) >= E)
+                int i = 0;
+                double temp;
+                double sum = 0;
+                do
                 {
-                    numI = -_1stnum * x * _num2 / (2 * i + 1);
-                    SS += numI;
-                    _num2 = _num2 * x * x;
+                    temp = Math.Pow(-1, i) * (Math.Pow(x, 2 * i + 1) / (2 * i + 1));
+                    sum += temp;
                     i++;
-                    _1stnum = -_1stnum;
-                }
+                } while (Math.Abs(temp) > E);
+
+                SS += sum;
                 SY += Math.Atan(x);
             }
+
             // end
 
             return (SS, SY);
